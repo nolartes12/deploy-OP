@@ -1,0 +1,100 @@
+{
+  "apiVersion" : "v1",
+  "kind" : "Service",
+  "metadata" : {
+    "annotations" : {
+      "discovery.3scale.net/discovery-version" : "v1",
+      "discovery.3scale.net/path" : "/rs",
+      "discovery.3scale.net/scheme" : "http",
+      "fabric8.io/git-branch" : "nolarte",
+      "fabric8.io/git-commit" : "45f01712ddeb6ca9cf48af69151860a761bb27e6",
+      "fabric8.io/git-url" : "https://gitlab.com/repositoriointegracion/integracionesb.git",
+      "prometheus.io/port" : "9779",
+      "prometheus.io/scrape" : "true"
+    },
+    "creationTimestamp" : "2021-11-12T19:40:31Z",
+    "labels" : {
+      "app" : "recibo-notificacion",
+      "discovery.3scale.net" : "true",
+      "expose" : "true",
+      "group" : "co.gov.jep.integracion",
+      "provider" : "fabric8",
+      "version" : "1.0.0-SNAPSHOT"
+    },
+    "managedFields" : [ {
+      "apiVersion" : "v1",
+      "fieldsType" : "FieldsV1",
+      "fieldsV1" : {
+        "f:metadata" : {
+          "f:annotations" : {
+            "." : { },
+            "f:discovery.3scale.net/discovery-version" : { },
+            "f:discovery.3scale.net/path" : { },
+            "f:discovery.3scale.net/scheme" : { },
+            "f:fabric8.io/git-branch" : { },
+            "f:fabric8.io/git-commit" : { },
+            "f:fabric8.io/git-url" : { },
+            "f:prometheus.io/port" : { },
+            "f:prometheus.io/scrape" : { }
+          },
+          "f:labels" : {
+            "." : { },
+            "f:app" : { },
+            "f:discovery.3scale.net" : { },
+            "f:expose" : { },
+            "f:group" : { },
+            "f:provider" : { },
+            "f:version" : { }
+          }
+        },
+        "f:spec" : {
+          "f:ports" : {
+            "." : { },
+            "k:{\"port\":8080,\"protocol\":\"TCP\"}" : {
+              "." : { },
+              "f:name" : { },
+              "f:port" : { },
+              "f:protocol" : { },
+              "f:targetPort" : { }
+            }
+          },
+          "f:selector" : {
+            "." : { },
+            "f:app" : { },
+            "f:group" : { },
+            "f:provider" : { }
+          },
+          "f:sessionAffinity" : { },
+          "f:type" : { }
+        }
+      },
+      "manager" : "okhttp",
+      "operation" : "Update",
+      "time" : "2021-11-12T19:40:31Z"
+    } ],
+    "name" : "recibo-notificacion",
+    "namespace" : "desarrollo",
+    "resourceVersion" : "146794305",
+    "selfLink" : "/api/v1/namespaces/desarrollo/services/recibo-notificacion",
+    "uid" : "96bba5b7-37d8-41b3-8455-31f69e9cf655"
+  },
+  "spec" : {
+    "clusterIP" : "172.30.162.16",
+    "ports" : [ {
+      "name" : "http",
+      "port" : 8080,
+      "protocol" : "TCP",
+      "targetPort" : 8080
+    } ],
+    "selector" : {
+      "app" : "recibo-notificacion",
+      "group" : "co.gov.jep.integracion",
+      "provider" : "fabric8"
+    },
+    "sessionAffinity" : "None",
+    "type" : "ClusterIP"
+  },
+  "status" : {
+    "loadBalancer" : { }
+  }
+}

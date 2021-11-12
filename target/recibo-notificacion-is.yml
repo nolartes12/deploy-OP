@@ -1,0 +1,15 @@
+---
+apiVersion: "v1"
+kind: "List"
+items:
+- apiVersion: "image.openshift.io/v1"
+  kind: "ImageStream"
+  metadata:
+    name: "recibo-notificacion"
+  spec:
+    tags:
+    - from:
+        kind: "ImageStreamImage"
+        name: "recibo-notificacion@sha256:2d656ac850ab09a7ab3fec1a8abdbb98ae9c350d7e8715026571a80d72f5c846"
+        namespace: "desarrollo"
+      name: "latest"

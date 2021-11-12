@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="        http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd        http://camel.apache.org/schema/spring       https://camel.apache.org/schema/spring/camel-spring.xsd">
+    <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
+        <restConfiguration bindingMode="json" component="netty4-http"
+            contextPath="/rs" port="8012"/>
+        <rest id="rest-recibo-notificacion" path="/api">
+            <post id="post-recibo-notificacion" uri="/recibo/notificacion">
+                <to id="to-enviar-recibo-notificacion" uri="direct:enviar-recibo-notificacion"/>
+            </post>
+        </rest>
+        <route id="simple-route">
+            <from id="from-enviar-recibo-notificacion" uri="direct:enviar-recibo-notificacion"/>
+            <log id="_log1" message="::: Inicio Enviar Recibo Notificacion :::"/>
+            <setProperty id="set-property-authorization" propertyName="authorization">
+                <simple>${header.Authorization}</simple>
+            </setProperty>
+            <removeHeaders id="remove-headers" pattern="*"/>
+            <setHeader headerName="Content-Type" id="set-header-content-type">
+                <constant>application/json</constant>
+            </setHeader>
+            <setHeader headerName="Accept" id="set-header-accept">
+                <constant>application/json</constant>
+            </setHeader>
+            <setHeader headerName="Authorization" id="set-header-authorization">
+                <simple>${property.authorization}</simple>
+            </setHeader>
+            <marshal id="marshal-entrada">
+                <json library="Jackson"/>
+            </marshal>
+            <to id="to-back" uri="https4://{{url.recibo.notificacion}}?bridgeEndpoint=true&amp;throwExceptionOnFailure=false"/>
+            <choice id="choice-resultado">
+                <when id="when-resultado-ok">
+                    <simple>${header.CamelHttpResponseCode} == '200'</simple>
+                    <unmarshal id="unmarshal-salida-back">
+                        <json library="Jackson"/>
+                    </unmarshal>
+                </when>
+            </choice>
+        </route>
+    </camelContext>
+</beans>

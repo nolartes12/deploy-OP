@@ -1,0 +1,31 @@
+---
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  annotations:
+    fabric8.io/git-commit: "45f01712ddeb6ca9cf48af69151860a761bb27e6"
+    fabric8.io/git-branch: "nolarte"
+    fabric8.io/git-url: "https://gitlab.com/repositoriointegracion/integracionesb.git"
+    prometheus.io/port: "9779"
+    prometheus.io/scrape: "true"
+    discovery.3scale.net/path: "/rs"
+    discovery.3scale.net/discovery-version: "v1"
+    discovery.3scale.net/scheme: "http"
+  labels:
+    expose: "true"
+    discovery.3scale.net: "true"
+    app: "recibo-notificacion"
+    provider: "fabric8"
+    version: "1.0.0-SNAPSHOT"
+    group: "co.gov.jep.integracion"
+  name: "recibo-notificacion"
+spec:
+  ports:
+  - name: "http"
+    port: 8080
+    protocol: "TCP"
+    targetPort: 8080
+  selector:
+    app: "recibo-notificacion"
+    provider: "fabric8"
+    group: "co.gov.jep.integracion"

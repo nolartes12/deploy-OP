@@ -1,0 +1,141 @@
+---
+apiVersion: "v1"
+kind: "List"
+items:
+- apiVersion: "v1"
+  kind: "Service"
+  metadata:
+    annotations:
+      fabric8.io/git-commit: "45f01712ddeb6ca9cf48af69151860a761bb27e6"
+      fabric8.io/git-branch: "nolarte"
+      fabric8.io/git-url: "https://gitlab.com/repositoriointegracion/integracionesb.git"
+      prometheus.io/port: "9779"
+      prometheus.io/scrape: "true"
+      discovery.3scale.net/path: "/rs"
+      discovery.3scale.net/discovery-version: "v1"
+      discovery.3scale.net/scheme: "http"
+    labels:
+      expose: "true"
+      discovery.3scale.net: "true"
+      app: "recibo-notificacion"
+      provider: "fabric8"
+      version: "1.0.0-SNAPSHOT"
+      group: "co.gov.jep.integracion"
+    name: "recibo-notificacion"
+  spec:
+    ports:
+    - name: "http"
+      port: 8080
+      protocol: "TCP"
+      targetPort: 8080
+    selector:
+      app: "recibo-notificacion"
+      provider: "fabric8"
+      group: "co.gov.jep.integracion"
+- apiVersion: "apps.openshift.io/v1"
+  kind: "DeploymentConfig"
+  metadata:
+    annotations:
+      fabric8.io/git-commit: "45f01712ddeb6ca9cf48af69151860a761bb27e6"
+      fabric8.io/git-branch: "nolarte"
+      fabric8.io/git-url: "https://gitlab.com/repositoriointegracion/integracionesb.git"
+    labels:
+      app: "recibo-notificacion"
+      provider: "fabric8"
+      version: "1.0.0-SNAPSHOT"
+      group: "co.gov.jep.integracion"
+    name: "recibo-notificacion"
+  spec:
+    replicas: 1
+    revisionHistoryLimit: 2
+    selector:
+      app: "recibo-notificacion"
+      provider: "fabric8"
+      group: "co.gov.jep.integracion"
+    strategy:
+      rollingParams:
+        timeoutSeconds: 3600
+      type: "Rolling"
+    template:
+      metadata:
+        annotations:
+          fabric8.io/git-commit: "45f01712ddeb6ca9cf48af69151860a761bb27e6"
+          fabric8.io/git-branch: "nolarte"
+          fabric8.io/git-url: "https://gitlab.com/repositoriointegracion/integracionesb.git"
+        labels:
+          rht.prod_ver: "7.8"
+          rht.comp_ver: "1.0.0-SNAPSHOT"
+          rht.prod_name: "Red_Hat_Integration"
+          rht.comp: "recibo-notificacion"
+          com.company: "Red_Hat"
+          app: "recibo-notificacion"
+          provider: "fabric8"
+          version: "1.0.0-SNAPSHOT"
+          group: "co.gov.jep.integracion"
+      spec:
+        containers:
+        - env:
+          - name: "SPRING_APPLICATION_JSON"
+            value: "{\"server\":{\"tomcat\":{\"max-threads\":1}}}"
+          - name: "KUBERNETES_NAMESPACE"
+            valueFrom:
+              fieldRef:
+                fieldPath: "metadata.namespace"
+          image: "recibo-notificacion:latest"
+          imagePullPolicy: "IfNotPresent"
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: "/actuator/health"
+              port: 8080
+              scheme: "HTTP"
+            initialDelaySeconds: 180
+            successThreshold: 1
+          name: "spring-boot"
+          ports:
+          - containerPort: 8080
+            name: "http"
+            protocol: "TCP"
+          - containerPort: 9779
+            name: "prometheus"
+            protocol: "TCP"
+          - containerPort: 8778
+            name: "jolokia"
+            protocol: "TCP"
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: "/actuator/health"
+              port: 8080
+              scheme: "HTTP"
+            initialDelaySeconds: 10
+            successThreshold: 1
+          resources:
+            limits:
+              cpu: "1.0"
+            requests:
+              cpu: "0.2"
+          securityContext:
+            privileged: false
+    triggers:
+    - type: "ConfigChange"
+- apiVersion: "route.openshift.io/v1"
+  kind: "Route"
+  metadata:
+    annotations:
+      fabric8.io/git-commit: "45f01712ddeb6ca9cf48af69151860a761bb27e6"
+      fabric8.io/git-branch: "nolarte"
+      fabric8.io/git-url: "https://gitlab.com/repositoriointegracion/integracionesb.git"
+    labels:
+      expose: "true"
+      app: "recibo-notificacion"
+      provider: "fabric8"
+      version: "1.0.0-SNAPSHOT"
+      group: "co.gov.jep.integracion"
+    name: "recibo-notificacion"
+  spec:
+    port:
+      targetPort: 8080
+    to:
+      kind: "Service"
+      name: "recibo-notificacion"
